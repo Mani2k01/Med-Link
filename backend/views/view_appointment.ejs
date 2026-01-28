@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appointments - Medical Software</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --brand: #009688;
+            --nav-height: 60px;
+            --footer-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f2f1, #f8fdfc);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: var(--brand);
+            color: #fff;
+            height: var(--nav-height);
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar i {
+            font-size: 26px;
+            margin-right: 12px;
+            color: #b2dfdb;
+        }
+
+        .navbar h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .left-icons {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 24px;
+        }
+        
+        .left-icons a {
+            color: #e0f2f1;
+            text-decoration: none;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        
+        .left-icons a:hover {
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        main {
+            flex: 1;
+            padding: calc(var(--nav-height) + 30px) 20px calc(var(--footer-height) + 30px);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .dashboard-title {
+            text-align: center;
+            font-size: 28px;
+            color: var(--brand);
+            margin-bottom: 20px;
+        }
+
+        /* ================= ACTION BAR ================= */
+        .bulk-action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .doctor-select {
+            padding: 10px 14px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            min-width: 200px;
+        }
+
+        /* ================= BUTTONS ================= */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 22px;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn.warning { background: linear-gradient(90deg, #f9a825, #f57f17); }
+        .btn.success { background: linear-gradient(90deg, #43a047, #2e7d32); }
+        .btn.danger { background: linear-gradient(90deg, #e53935, #b71c1c); }
+
+        .btn:hover { transform: translateY(-2px); }
+        .btn.small {
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 20px;
+        }
+
+        /* ================= APPOINTMENT CARD ================= */
+        .appointment-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            margin-bottom: 18px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        /* Checkbox */
+        .checkbox-wrapper {
+            padding-top: 8px;
+        }
+
+        .appointment-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--brand);
+            cursor: pointer;
+        }
+
+        /* ================= NO APPOINTMENTS STATE ================= */
+        .no-appointments {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            text-align: center;
+            color: #555;
+            display: none;
+        }
+
+        .no-appointments i {
+            font-size: 48px;
+            color: #009688;
+            margin-bottom: 12px;
+        }
+
+        .no-appointments h3 {
+            font-size: 20px;
+            color: #004d40;
+            margin-bottom: 6px;
+        }
+
+        .no-appointments p {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .card-content {
+            flex: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            color: #004d40;
+        }
+
+        .sub-text {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .status {
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .doctor-name-badge {
+            background: linear-gradient(90deg, #e0f2f1, #b2dfdb);
+            color: #004d40;
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .status.booked {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status.closed {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .card-body {
+            margin-top: 10px;
+            font-size: 14px;
+            display: grid;
+            gap: 6px;
+        }
+
+        .card-body i {
+            color: var(--brand);
+            margin-right: 6px;
+        }
+
+        .appointment-label {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: #009688;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .appointment-label.doctor {
+            background: #00bcd4;
+        }
+
+        .appointment-checkbox:checked ~ .card-content {
+            background: #e0f2f1;
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            height: var(--footer-height);
+            background: var(--brand);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <i class="fa-solid fa-stethoscope"></i>
+    <h1>Appointments</h1>
+    <div class="left-icons">
+        <a href="/redirect_profile"><i id="user" class="fa-regular fa-circle-user"></i></a>
+        <a href="/back"><i id="exit" class="fa-solid fa-arrow-right-from-bracket"></i></a>
+    </div>
+</div>
+
+<main>
+<div class="container">
+    <h2 class="dashboard-title">All Appointments</h2>
+
+    <form action="/change_doctor" method="post">
+
+        <% if (user === 'clinic') { %>
+        <div class="bulk-action-bar">
+            <select id="doctorFilter" class="doctor-select">
+                <option value="all">All Doctors</option>
+                <% doctors.forEach(d => { %>
+                    <option value="<%= d.doctor_id %>"><%= d.doctor_name %></option>
+                <% }) %>
+            </select>
+
+            <input type="date" id="dateFilter" class="doctor-select" />
+
+            <button class="btn warning" id="changeDoctorBtn" type="button">
+                <i class="fa-solid fa-user-pen"></i> Change Doctor
+            </button>
+
+            <label>
+                <span id="appointmentCountLabel" class="appointment-label total"></span>
+            </label>
+
+            <select id="doctorSelect" class="doctor-select" name="doctor" style="display:none;">
+                <option value="">Select Doctor</option>
+                <% doctors.forEach(d => { %>
+                    <option value="<%= d.doctor_id %>"><%= d.doctor_name %></option>
+                <% }) %>
+            </select>
+
+            <button class="btn success" id="proceedBtn" type="submit" name="action" value="submit" style="display:none;">
+                <i class="fa-solid fa-check"></i> Proceed
+            </button>
+        </div>
+        <% } else { %>
+        <div class="bulk-action-bar">
+            <input type="date" id="dateFilter" class="doctor-select" />
+            <label>
+                <span id="appointmentCountLabel" class="appointment-label total"></span>
+            </label>
+        </div>
+        <% } %>
+
+        <!-- APPOINTMENTS -->
+        <% results.forEach(ap => { %>
+        <div class="appointment-card"
+            data-doctor-id="<%= ap.doctor_id %>"
+            data-appointment-id="<%= ap.id %>"
+            data-patient-id="<%= ap.patient_id %>"
+            data-clinic="<%= ap.hospital_id %>"
+            data-date="<%= new Date(ap.appointment).toISOString().split('T')[0] %>">
+
+            <div class="checkbox-wrapper">
+                <input type="checkbox"
+                    class="appointment-checkbox"
+                    name="appointment_ids"
+                    value="<%= ap.id %>">
+
+                <input type="hidden"
+                    name="patient_ids_<%= ap.id %>"
+                    value="<%= ap.patient_id %>">
+            </div>
+
+            <div class="card-content">
+                <div class="card-header">
+                    <div>
+                        <h3><%= ap.patient_name %></h3>
+                        <div class="sub-text">Patient ID: <%= ap.patient_id %></div>
+                    </div>
+
+                    <% if (user === 'clinic') { %>
+                    <span class="doctor-name-badge">
+                        <i class="fa-solid fa-user-doctor"></i>
+                        <%= doctor_map[ap.doctor_id] || "Unknown Doctor" %>
+                    </span>
+                    <% } %>
+
+                    <span class="status <%= ap.status.toLowerCase() %>">
+                        <%= ap.status %>
+                    </span>
+                </div>
+
+                <div class="card-body">
+                    <div><i class="fa-solid fa-user-doctor"></i> Doctor ID: <b><%= ap.doctor_id %></b></div>
+                    <div>
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <%= new Date(ap.appointment).toLocaleString('en-GB', {
+                            day:'2-digit', month:'short', year:'numeric',
+                            hour:'2-digit', minute:'2-digit', hour12:true
+                        }) %>
+                    </div>
+                    <div><i class="fa-solid fa-notes-medical"></i> <%= ap.reason %></div>
+                </div>
+
+                <% if (user === 'doctor') { %>
+                <div class="card-actions" style="margin-top:12px; display:flex; gap:10px; justify-content:flex-end;">
+                    <button
+                        class="btn success small"
+                        type="button"
+                        onclick="processAppointment(this, 'finished')">
+                        <i class="fa-solid fa-check"></i> Review
+                    </button>
+
+                    <button
+                        class="btn warning small"
+                        type="button"
+                        onclick="singleAction('reschedule', '<%= ap.id %>')">
+                        <i class="fa-solid fa-calendar-days"></i> Reschedule
+                    </button>
+
+                    <button
+                        class="btn danger small"
+                        type="button"
+                        onclick="singleAction('cancel', '<%= ap.id %>')">
+                        <i class="fa-solid fa-xmark"></i> Cancel
+                    </button>
+                </div>
+                <% } else { %>
+                <div class="card-actions" style="margin-top:12px; display:flex; gap:10px; justify-content:flex-end;">
+                    <button
+                        class="btn warning small"
+                        type="button"
+                        onclick="singleAction('reschedule', '<%= ap.id %>')">
+                        <i class="fa-solid fa-calendar-days"></i> Reschedule
+                    </button>
+
+                    <button
+                        class="btn danger small"
+                        type="button"
+                        onclick="singleAction('cancel', '<%= ap.id %>')">
+                        <i class="fa-solid fa-xmark"></i> Cancel
+                    </button>
+                </div>
+                <% } %>
+
+            </div>
+        </div>
+        <% }) %>
+
+        <div id="noAppointments" class="no-appointments">
+            <i class="fa-solid fa-calendar-xmark"></i>
+            <h3>No Appointments Found</h3>
+            <p>No appointments are scheduled for the selected date or doctor.</p>
+        </div>
+    </form>
+</div>
+</main>
+
+<div class="footer">
+    © 2025 VEDSP Inventive Private Limited. All rights reserved.
+</div>
+
+<% if (user === 'clinic') { %>
+<script type="application/json" id="doctor-count-data">
+    <%= JSON.stringify(doctor_count) %>
+</script>
+<% } %>
+
+<script type="application/json" id="total-count-data">
+    <%= JSON.stringify(count) %>
+</script>
+
+<script>
+const backendAlert = "<%= typeof js_alert !== 'undefined' ? js_alert : '' %>";
+if (backendAlert) alert(backendAlert);
+
+const doctorFilter = document.getElementById("doctorFilter");
+const dateFilter = document.getElementById("dateFilter");
+const appointmentCards = document.querySelectorAll(".appointment-card");
+const noAppointments = document.getElementById("noAppointments");
+const appointmentCountLabel = document.getElementById("appointmentCountLabel");
+
+const changeDoctorBtn = document.getElementById("changeDoctorBtn");
+const doctorSelect = document.getElementById("doctorSelect");
+const proceedBtn = document.getElementById("proceedBtn");
+
+if (changeDoctorBtn && doctorSelect && proceedBtn) {
+    changeDoctorBtn.addEventListener("click", () => {
+        doctorSelect.style.display = "block";
+        proceedBtn.style.display = "block";
+    });
+
+    proceedBtn.addEventListener("click", function (e) {
+        const checked = document.querySelectorAll(".appointment-checkbox:checked");
+        if (checked.length === 0) {
+            alert("Please select at least one appointment");
+            e.preventDefault();
+        }
+    });
+}
+
+const totalCount = JSON.parse(
+    document.getElementById("total-count-data").textContent
+);
+
+const doctorNameMap = {};
+if (doctorFilter) {
+    doctorFilter.querySelectorAll("option").forEach(opt => {
+        if (opt.value !== "all") {
+            doctorNameMap[opt.value] = opt.textContent.trim();
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const today = new Date().toISOString().split("T")[0];
+    dateFilter.value = today;
+
+    appointmentCountLabel.innerText = `Appointments: ${totalCount}`;
+    appointmentCountLabel.classList.add("total");
+
+    applyFilters();
+});
+
+function applyFilters() {
+
+    const selectedDoctor = doctorFilter ? doctorFilter.value : "all";
+    const selectedDate = dateFilter.value;
+
+    let visibleCount = 0;
+
+    appointmentCards.forEach(card => {
+        const cardDoctor = card.dataset.doctorId;
+        const cardDate = card.dataset.date;
+
+        const doctorMatch =
+            selectedDoctor === "all" || cardDoctor === selectedDoctor;
+
+        const dateMatch =
+            !selectedDate || cardDate === selectedDate;
+
+        if (doctorMatch && dateMatch) {
+            card.style.display = "flex";
+            visibleCount++;
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    noAppointments.style.display = visibleCount === 0 ? "block" : "none";
+
+    if (selectedDoctor === "all") {
+        appointmentCountLabel.innerText = `Appointments: ${visibleCount}`;
+        appointmentCountLabel.classList.remove("doctor");
+        appointmentCountLabel.classList.add("total");
+    } else {
+        const doctorName = doctorNameMap[selectedDoctor] || "Doctor";
+        appointmentCountLabel.innerText =
+            `Dr. ${doctorName} Appointments: ${visibleCount}`;
+        appointmentCountLabel.classList.remove("total");
+        appointmentCountLabel.classList.add("doctor");
+    }
+}
+
+if (doctorFilter) {
+    doctorFilter.addEventListener("change", applyFilters);
+}
+dateFilter.addEventListener("change", applyFilters);
+
+function singleAction(action, appointmentId) {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/view_appointment/action";
+
+    form.innerHTML = `
+        <input type="hidden" name="action" value="${action}">
+        <input type="hidden" name="appointment_id" value="${appointmentId}">
+    `;
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function processAppointment(button, action) {
+    const card = button.closest(".appointment-card");
+
+    const appointmentId = card.dataset.appointmentId;
+    const patientId     = card.dataset.patientId;
+    const clinic        = card.dataset.clinic;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/view_appointment/action";
+
+    form.innerHTML = `
+        <input type="hidden" name="action" value="${action}">
+        <input type="hidden" name="appointment_id" value="${appointmentId}">
+        <input type="hidden" name="patient_id" value="${patientId}">
+        <input type="hidden" name="clinic" value="${clinic}">
+    `;
+
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Information</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 60px;
+        }
+        
+        .navbar {
+            background: #009688;
+            color: white;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .navbar i {
+            font-size: 28px;
+            margin-right: 12px;
+            color: #b2dfdb;
+        }
+        
+        .navbar h1 {
+            margin: 0;
+            font-size: 23px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        main {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .container {
+            padding: 90px 20px 80px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .form-box,
+        .success-box,
+        .details-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            width: 900px;
+            max-width: 95%;
+            margin: 20px auto;
+        }
+        
+        .section-card {
+            background: #f9f9f9;
+            padding: 28px;
+            border-radius: 16px;
+            margin-bottom: 28px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+            /* test */
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        
+        .section-card h3 {
+            color: #00796b;
+            margin-bottom: 22px;
+            font-weight: 600;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #e0f2f1;
+            padding-bottom: 8px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 280px;
+        }
+        
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #ccc;
+            border-radius: 14px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #009688;
+            box-shadow: 0 0 8px rgba(0, 150, 136, 0.3);
+            outline: none;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .file-upload-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+        
+        .file-upload-btn {
+            padding: 12px 28px;
+            background: #009688;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .file-upload-btn:hover {
+            background: #00796b;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 35px;
+        }
+        
+        .button-group button {
+            flex: 1;
+            max-width: 200px;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .btn-submit {
+            background: #009688;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: #00796b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 150, 136, 0.3);
+        }
+        
+        .btn-back {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-view {
+            background: #2980b9;
+            color: white;
+        }
+        
+        .success-box {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .success-box h2 {
+            color: #2e7d32;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .success-box .patient-id {
+            font-size: 26px;
+            font-weight: bold;
+            color: #009688;
+            background: #e0f2f1;
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        
+        .details-box h2 {
+            text-align: center;
+            color: #009688;
+            margin-bottom: 40px;
+            font-size: 26px;
+        }
+        
+        .detail-item {
+            padding: 10px 0;
+            font-size: 16px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .detail-item strong {
+            color: #00695c;
+            min-width: 180px;
+            display: inline-block;
+        }
+        
+        footer {
+            background: #009688;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        /* Container wrapping the select */
+        
+        .custom-dropdown-container {
+            position: relative;
+        }
+        /* Select inside container */
+        
+        .custom-dropdown-container select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            padding: 14px 36px 14px 16px;
+            /* right padding for arrow */
+            border: 1.5px solid #ccc;
+            border-radius: 14px;
+            font-size: 15px;
+        }
+        /* Arrow on container */
+        
+        .custom-dropdown-container::after {
+            content: '▼';
+            position: absolute;
+            top: 50%;
+            right: 30px;
+            /* move from far right as you want */
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 12px;
+            color: #555;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            .form-group {
+                min-width: 100%;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .button-group button {
+                max-width: none;
+            }
+        }
+        
+        .form-box {
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .page-container {
+            padding: 100px 30px 80px;
+        }
+        
+        #patientForm {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            height: calc(100vh - 60px - 60px);
+        }
+        
+        .panel {
+            height: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-title {
+            color: #00796b;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0f2f1;
+            padding-bottom: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1.5px solid #ccc;
+        }
+        
+        .add-btn {
+            margin-top: 12px;
+            background: #009688;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .add-btn:hover {
+            background: #00796b;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            gap: 15px;
+        }
+        
+        .btn-submit {
+            background: #009688;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+        
+        .btn-back {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+        }
+        /* Responsive */
+        
+        @media (max-width: 900px) {
+            #patientForm {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .vitals-scroll {
+            flex: 1;
+            min-height: 0;
+            /* 🔴 THIS PREVENTS HEIGHT GROWTH */
+            overflow-y: auto;
+            /* enables internal scroll */
+            overscroll-behavior: contain;
+            border: 1px solid #ddd;
+            /* optional, for clarity */
+        }
+        
+        .vitals-block {
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+        }
+        
+        .vitals-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+        
+        .remove-btn {
+            background: #fff5f5;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            border-radius: 30px;
+            padding: 10px 18px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .remove-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #vitalsContainer {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel.left-panel {
+            height: calc(130vh - 60px - 60px);
+            /* navbar + footer */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .reading-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #00796b;
+            margin-bottom: 12px;
+            border-left: 4px solid #009688;
+            padding-left: 8px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar" style="background:#009688; color:white; padding:15px 30px; height:60px; display:flex; align-items:center; justify-content:flex-start; box-shadow:0 4px 12px rgba(0,0,0,0.15); position:fixed; top:0; width:100%; z-index:1000;">
+        <i class="fa-solid fa-stethoscope" style="font-size:32px; margin-right:16px; color:#b2dfdb;"></i>
+        <h1 style="margin:0; font-size:24px; font-weight:600; color:white; letter-spacing:0.8px;">Patient Information</h1>
+    </div>
+    <main>
+        <div class="page-container">
+            <form id="patientForm" method="post" action="/update_issue/action">
+
+                <!-- LEFT : NURSE VITALS -->
+                <div class="panel left-panel">
+                    <h3 class="panel-title">Nurse Vitals</h3>
+                    <div class="section-card" style="flex:1; display:flex; flex-direction:column;">
+
+                        <div class="vitals-scroll">
+                            <div id="vitalsContainer">
+                                <% if (payload && payload.nurse_entries && payload.nurse_entries.length > 0) { %>
+                                <% payload.nurse_entries.forEach((r, index) => { %>
+                                    <div class="vitals-block">
+                                    <h4 class="reading-title">Reading <%= index + 1 %></h4>
+
+                                    <input type="hidden" name="timestamp[]" value="<%= r.timestamp || '' %>">
+
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Temperature" name="temperature[]" value="<%= r.temperature || '' %>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Blood Pressure" name="bp[]" value="<%= r.bp || '' %>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Pulse" name="pulse[]" value="<%= r.pulse || '' %>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="SPO2" name="spo2[]" value="<%= r.spo2 || '' %>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Weight" name="weight[]" value="<%= r.weight || '' %>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Blood sugar" name="blood_sugar[]" value="<%= r.blood_sugar || '' %>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Pain" name="pain[]" value="<%= r.pain || '' %>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Remarks" name="remarks[]" value="<%= r.remarks || '' %>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Nurse Treated" name="nurse_name[]" value="<%= r.nurse_name || '' %>">
+                                    </div>
+                                    </div>
+                                <% }) %>
+
+                                <% } else { %>
+
+                                <!-- Default empty first reading -->
+                                <div class="vitals-block">
+                                    <h4 class="reading-title">Reading 1</h4>
+                                    <input type="hidden" name="timestamp[]" value="">
+
+                                    <div class="form-group"><input type="text" placeholder="Temperature" name="temperature[]"></div>
+                                    <div class="form-group"><input type="text" placeholder="Blood Pressure" name="bp[]"></div>
+                                    <div class="form-group"><input type="text" placeholder="Pulse" name="pulse[]"></div>
+                                    <div class="form-group"><input type="text" placeholder="SPO2" name="spo2[]"></div>
+                                    <div class="form-group"><input type="text" placeholder="Weight" name="weight[]"></div>
+                                    <div class="form-group"><input type="text" placeholder="Blood sugar" name="blood_sugar[]"></div>
+                                    <div class="form-group"><input type="text" placeholder="Pain" name="pain[]"></div>
+                                    <div class="form-group"><input type="text" placeholder="Remarks" name="remarks[]"></div>
+                                    <div class="form-group"><input type="text" placeholder="Nurse Treated" name="nurse_name[]"></div>
+                                </div>
+
+                                <% } %>
+
+                            </div>
+                        </div>
+
+
+                        <div class="vitals-actions">
+                            <button type="button" id="addVitalsBtn" class="add-btn">➕ Add Reading</button>
+                            <button type="button" id="removeVitalsBtn" class="remove-btn hidden">➖ Remove Reading</button>
+                        </div>
+
+                    </div>
+                    <div class="button-group">
+                        <button type="button" class="btn-back" onclick="history.back()">Back</button>
+                        <button type="submit" name="action" value="submit" class="btn-submit">Submit</button>
+                    </div>
+                </div>
+
+                <!-- RIGHT : MEDICAL INFO -->
+                <div class="panel right-panel">
+                    <h3 class="panel-title">Medical Information</h3>
+                    <div class="section-card">
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="medicalFile" name="medicalFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+                            <label for="medicalFile" class="file-upload-btn">Upload File</label>
+                        </div>
+                        <% const doc = (payload && payload.doctor_entry) ? payload.doctor_entry : {}; %>
+                        <div class="form-group"><input type="text" name="diseaseName" placeholder="DiseaseName" value="<%= doc.diseaseName || '' %>"></div>
+                        <div class="form-group"><input type="text" name="allergies" placeholder="allergies(if any)" value="<%= doc.allergies || '' %>"></div>
+                        <div class="form-group"><input type="text" name="reasonVisit" placeholder="Reason for visit" value="<%= doc.reasonVisit || '' %>"></div>
+                        <div class="form-group"><input type="text" name="currentMeds" placeholder="Current Medications" value="<%= doc.currentMeds || '' %>"></div>
+                        <div class="form-group"><input type="text" name="patientId" placeholder="Patient ID" value="<%= patient_id || '' %>" required/></div>
+                        <div class="form-group"><input type="text" name="appointmentId" value="<%= appointment_id || '' %>" hidden/></div>
+                        <div class="form-group"><input type="text" name="treatedBy" placeholder="Treaded By" value="<%= doc.treatedBy || '' %>"></div>
+                        <div class="form-group"><input type="text" name="hospital" placeholder="Hospital" value="<%= hospital || '' %>" required/>
+                        </div>
+
+
+                    </div>
+                    <div class="button-group">
+                        <button class="btn-back" type="submit" name="action" value="back">Back</button>
+                        <button type="submit" name="action" value="submit" class="btn-submit">Submit</button>
+                    </div>
+
+            </form>
+            </div>
+
+    </main>
+
+
+    <footer>© 2025 VEDSP Inventive Private Limited. All rights reserved.</footer>
+    <script>
+        // function addVitals() {
+        //     const container = document.getElementById("vitalsContainer");
+        //     const block = document.querySelector(".vitals-block").cloneNode(true);
+
+        //     block.querySelectorAll("input").forEach(i => i.value = "");
+        //     container.appendChild(block);
+        // }
+        const vitalsContainer = document.getElementById("vitalsContainer");
+        const addVitalsBtn = document.getElementById("addVitalsBtn");
+        const removeVitalsBtn = document.getElementById("removeVitalsBtn");
+
+        function updateVitalsButtons() {
+            const count = vitalsContainer.children.length;
+
+            if (count > 1) {
+                removeVitalsBtn.classList.remove("hidden");
+            } else {
+                removeVitalsBtn.classList.add("hidden");
+            }
+        }
+
+        removeVitalsBtn.addEventListener("click", () => {
+            const count = vitalsContainer.children.length;
+            if (count <= 1) return;
+
+            vitalsContainer.removeChild(vitalsContainer.lastElementChild);
+            updateVitalsButtons();
+        });
+
+        // Initial state
+        updateVitalsButtons();
+
+
+        // addVitalsBtn.addEventListener("click", () => {
+        //     const blocks = vitalsContainer.querySelectorAll(".vitals-block");
+        //     const newIndex = blocks.length + 1;
+
+        //     const template = blocks[0];
+        //     const clone = template.cloneNode(true);
+
+        //     // Update label
+        //     const title = clone.querySelector(".reading-title");
+        //     title.textContent = `Reading ${newIndex}`;
+
+        //     // Clear inputs
+        //     clone.querySelectorAll("input").forEach(input => input.value = "");
+
+        //     vitalsContainer.appendChild(clone);
+
+        //     updateVitalsButtons();
+
+        //     // Auto-scroll inside vitals only
+        //     document.querySelector(".vitals-scroll").scrollTop =
+        //         document.querySelector(".vitals-scroll").scrollHeight;
+        // });
+        addVitalsBtn.addEventListener("click", () => {
+            const blocks = vitalsContainer.querySelectorAll(".vitals-block");
+            const newIndex = blocks.length + 1;
+
+            const clone = blocks[0].cloneNode(true);
+
+            // Update title
+            clone.querySelector(".reading-title").textContent = `Reading ${newIndex}`;
+
+            // Clear inputs
+            clone.querySelectorAll("input").forEach(input => {
+                if (input.type === "hidden") {
+                    input.value = ""; // NEW reading → no timestamp yet
+                } else {
+                    input.value = "";
+                }
+            });
+
+            vitalsContainer.appendChild(clone);
+            updateVitalsButtons();
+
+            document.querySelector(".vitals-scroll").scrollTop =
+                document.querySelector(".vitals-scroll").scrollHeight;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Information - Medical Software</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+         :root {
+            --brand: #009688;
+            --height-bar: 60px;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #e0f2f1, #f8fdfc);
+            color: #333;
+        }
+        /* Navbar */
+        
+        .navbar {
+            background-color: var(--brand);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            height: var(--height-bar);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-left i {
+            margin-right: 10px;
+            font-size: 26px;
+            color: #b2dfdb;
+        }
+        
+        .navbar-left h1 {
+            font-size: 22px;
+            margin: 0;
+        }
+        /* Search Bar */
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-container input {
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: none;
+            width: 200px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .search-container button {
+            background: white;
+            color: var(--brand);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        main {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        /* Container */
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 220px;
+            padding: 20px 0;
+        }
+        
+        .form-box {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            width: 400px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background: var(--brand);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        /* Result List */
+        
+        .result-list {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .record-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .record-item:last-child {
+            border-bottom: none;
+        }
+        
+        .view-btn {
+            background: var(--brand);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        /* Footer */
+        
+        .footer {
+            background-color: var(--brand);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--height-bar);
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+        
+        .visit-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+        }
+        
+        .visit-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            font-weight: 600;
+            color: #00695c;
+        }
+        
+        .visit-date,
+        .visit-hospital {
+            margin-right: 16px;
+        }
+        
+        .doctor-card {
+            background: #f1f8f6;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .doctor-card h4,
+        .vitals-section h4 {
+            margin: 0 0 12px;
+            color: #00796b;
+        }
+        
+        .doctor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        
+        .doctor-grid div {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .doctor-grid strong {
+            display: block;
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .vitals-section {
+            margin-top: 18px;
+        }
+        
+        .vital-card {
+            border-left: 4px solid #009688;
+            background: #fafefe;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+        }
+        
+        .vital-time {
+            font-size: 13px;
+            font-weight: 600;
+            color: #00695c;
+            margin-bottom: 10px;
+        }
+        
+        .vital-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        
+        .vital-grid label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .vital-grid span {
+            font-weight: 600;
+            display: block;
+        }
+        
+        .view-action {
+            text-align: right;
+            margin-top: 18px;
+        }
+        
+        .muted {
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <i class="fa-solid fa-stethoscope"></i>
+            <h1>Patient Information</h1>
+        </div>
+
+        <!-- Search bar -->
+        <% if (user === "doctor") { %>
+        <form method="POST" action="/view_patient_record/action" class="search-container">
+            <input name="searchId" type="text" placeholder="Search Patient ID">
+            <button name="action" type="submit" value="search">Search</button>
+            <button name="action" type="submit" value="back">Back</button>
+        </form>
+        <% } else { %>
+        <form method="POST" action="/view_patient_record/action" class="search-container">
+            <button name="action" type="submit" value="back">Back</button>
+        </form>
+        <% } %>
+
+    </div>
+
+    <main>
+        <% if (results && results.length > 0) { %>
+
+        <% if (view_patient) { %>
+        <div class="result-list" style="text-align:center;">
+            <h3>Patient Profile</h3>
+            <p>View complete patient profile information</p>
+            <form method="POST" action="/view_patient_profile/action">
+                <input type="hidden" name="patient_id" value="<%= searched_patient_id %>">
+                <button class="view-btn" type="submit">
+                    View Patient Profile
+                </button>
+            </form>
+        </div>
+        <% } %>
+
+        <div class="result-list">
+            <% results.forEach(function(r){ %>
+            <div class="visit-card">
+
+                <!-- Visit Header -->
+                <div class="visit-header">
+                    <div>
+                        <span class="visit-date">🗓 <%= r.visit_date %></span>
+                        <span class="visit-hospital">🏥 <%= r.hospital %></span>
+                    </div>
+                </div>
+
+                <!-- Doctor Details -->
+                <div class="doctor-card">
+                    <h4>👨‍⚕️ Doctor Assessment</h4>
+
+                    <% if (r.doctor && Object.keys(r.doctor).length > 0) { %>
+                    <div class="doctor-grid">
+                        <div>
+                            <strong>Name of the Disease</strong>
+                            <span><%= r.doctor.diseaseName || "" %></span>
+                        </div>
+                        <div>
+                            <strong>Reason for Visit</strong>
+                            <span><%= r.doctor.reasonVisit || "" %></span>
+                        </div>
+                        <div>
+                            <strong>Prescribed Medication</strong>
+                            <span><%= r.doctor.currentMeds || "" %></span>
+                        </div>
+                        <div>
+                            <strong>Name of Doctor Treated by</strong>
+                            <span><%= r.doctor.treatedBy || "" %></span>
+                        </div>
+                    </div>
+                    <% } else { %>
+                    <em class="muted">No doctor assessment recorded</em>
+                    <% } %>
+                </div>
+
+                <!-- Nurse Vitals -->
+                <div class="vitals-section">
+                    <h4>🩺 Nurse Vitals Checking</h4>
+
+                    <% if (r.nurse_entries && r.nurse_entries.length > 0) { %>
+                        <% r.nurse_entries.forEach(function(n){ %>
+                        <div class="vital-card">
+                            <div class="vital-time">⏱ <%= n.timestamp %></div>
+
+                            <div class="vital-grid">
+                                <div><label>Temp</label><span><%= n.temperature %> °C</span></div>
+                                <div><label>BP</label><span><%= n.bp %></span></div>
+                                <div><label>Pulse</label><span><%= n.pulse %></span></div>
+                                <div><label>SpO₂</label><span><%= n.spo2 %>%</span></div>
+                                <div><label>Weight</label><span><%= n.weight %> kg</span></div>
+                                <div><label>Sugar</label><span><%= n.blood_sugar %></span></div>
+                                <div><label>Pain</label><span><%= n.pain %></span></div>
+                                <div><label>Name of the Nurse</label><span><%= n.nurse_name %></span></div>
+                            </div>
+                        </div>
+                        <% }) %>
+                    <% } else { %>
+                        <em class="muted">No nurse vitals recorded</em>
+                    <% } %>
+                </div>
+
+                <!-- Action -->
+                <% if (view_patient) { %>
+                <form method="POST" action="/view_patient/action" class="view-action">
+                    <input type="hidden" name="rid" value="<%= r.id %>">
+                    <button class="view-btn" type="submit">View Full Record</button>
+                </form>
+                <% } %>
+
+            </div>
+            <% }) %>
+        </div>
+
+        <% } %>
+    </main>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 VEDSP Inventive Private Limited. All rights reserved.</p>
+    </div>
+
+</body>
+</html>

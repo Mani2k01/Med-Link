@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Medical Software</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --brand: #009688;
+            --nav-height: 60px;
+            --footer-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f2f1, #f8fdfc);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================= NAVBAR ================= */
+        .navbar {
+            background: var(--brand);
+            color: white;
+            height: var(--nav-height);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+            z-index: 1000;
+        }
+
+        .navbar i {
+            font-size: 22px;
+            margin-right: 10px;
+            color: #b2dfdb;
+        }
+
+        .navbar h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .search-container input {
+            width: 150px;
+            padding: 7px 12px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            font-size: 13px;
+        }
+
+        .search-container button {
+            padding: 7px 12px;
+            border-radius: 20px;
+            border: none;
+            background: white;
+            color: var(--brand);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .left-icons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification-icon {
+            position: relative;
+        }
+
+        .notification-icon i {
+            font-size: 22px;
+            color: white;
+        }
+
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e74c3c;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px var(--brand);
+            animation: pulse 1.2s infinite;
+        }
+
+        /* ================= MAIN (VERTICAL CENTER FIX) ================= */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;   /* horizontal center */
+            align-items: center;       /* vertical center */
+            padding-top: var(--nav-height);
+            padding-bottom: var(--footer-height);
+            min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            padding: 20px 16px;
+            animation: slideUp 0.7s ease-out;
+        }
+
+        .btn {
+            width: 100%;
+            max-width: 340px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(90deg, #009688, #00796b);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 150, 136, 0.2);
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #00796b, #004d40);
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: #95a5a6;
+        }
+
+        .btn-back:hover {
+            background: #7f8c8d;
+        }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            background: var(--brand);
+            color: white;
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            font-size: 12px;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        /* ANIMATIONS */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* ============== MOBILE FIXES ============== */
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 0 10px;
+            }
+
+            .navbar h1 {
+                font-size: 16px;
+            }
+
+            .search-container input {
+                width: 110px;
+                font-size: 12px;
+            }
+
+            .search-container button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+
+            .container {
+                padding: 18px 12px;
+            }
+
+            .btn {
+                font-size: 14px;
+                padding: 13px;
+            }
+
+            .notification-icon i,
+            #user {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <i class="fa-solid fa-stethoscope"></i>
+    <h1>Dashboard</h1>
+
+    <div class="nav-right">
+        <% if (user === "doctor" || user === "clinic") { %>
+        <form method="POST" action="/view_patient_record/action" class="search-container">
+            <input name="searchId" type="text" placeholder="Search Patient ID">
+            <button name="action" type="submit" value="search">Search</button>
+        </form>
+        <% } %>
+
+        <div class="left-icons">
+            <% if (user === "doctor" || user === "patient") { %>
+            <a href="/notifications" class="notification-icon">
+                <i class="fa-solid fa-bell"></i>
+                <% if (notification_count > 0) { %>
+                <span class="badge"><%= notification_count %></span>
+                <% } %>
+            </a>
+            <% } %>
+            <a href="/redirect_profile">
+                <i id="user" class="fa-regular fa-circle-user"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<main>
+<form method="POST" action="/dashboard/action">
+
+<% if (user === "patient") { %>
+<div class="container">
+    <button class="btn" name="action" value="enter_details">🩺 Enter Details</button>
+    <button class="btn" name="action" value="view_details">📋 View Details</button>
+    <button class="btn" name="action" value="appointment">📅 Make an Appointment</button>
+    <button class="btn btn-back" name="action" value="logout">⬅️ Logout</button>
+</div>
+<% } %>
+
+<% if (user === "doctor") { %>
+<div class="container">
+    <button class="btn" name="action" value="enter_details">🩺 Enter Patient Details</button>
+    <button class="btn" name="action" value="view_appointment">📋 View Appointments</button>
+    <button class="btn" name="action" value="schedule">📅 Schedule Appointment</button>
+    <button class="btn btn-back" name="action" value="logout">⬅️ Logout</button>
+</div>
+<% } %>
+
+<% if (user === "clinic") { %>
+<div class="container">
+    <button class="btn" name="action" value="enter_details">🩺 Enter Patient Details</button>
+    <button class="btn" name="action" value="view_appointment">📋 View Appointments</button>
+    <button class="btn" name="action" value="schedule">📅 Schedule Appointment</button>
+    <button class="btn" name="action" value="treatment">📋 Treatment Records</button>
+    <button class="btn btn-back" name="action" value="logout">⬅️ Logout</button>
+</div>
+<% } %>
+
+</form>
+</main>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 VEDSP Inventive Private Limited. All rights reserved.</p>
+    </div>
+
+    <script>
+        alert(data.message);
+    </script>
+
+</body>
+
+</html>

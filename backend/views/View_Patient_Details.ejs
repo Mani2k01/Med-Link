@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Patient Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+         :root {
+            --brand: #009688;
+            --nav-height: 60px;
+            --footer-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fffe;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: var(--brand);
+            color: white;
+            height: var(--nav-height);
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .navbar i {
+            font-size: 28px;
+            margin-right: 12px;
+            color: #b2dfdb;
+        }
+
+        .navbar h1 {
+            font-size: 23px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        main {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: calc(var(--nav-height) + 40px) 20px calc(var(--footer-height) + 40px);
+        }
+
+        .emr-container {
+            min-width: 1000px;
+            margin: auto;
+        }
+
+        .emr-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .emr-card h2,
+        .emr-card h3 {
+            color: #00695c;
+            margin-bottom: 18px;
+        }
+
+        .summary-grid,
+        .doctor-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .summary-grid span,
+        .doctor-grid span {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .summary-grid strong,
+        .doctor-grid strong {
+            display: block;
+            font-size: 15px;
+            color: #222;
+        }
+
+        .visit-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .nurse-section {
+            margin-top: 30px;
+        }
+
+        .vital-card {
+            background: #f9fdfc;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-left: 6px solid #26a69a;
+        }
+
+        .vital-time {
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #004d40;
+        }
+
+        .vital-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .vital-grid label {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .vital-grid span {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .vital-remarks {
+            margin-top: 12px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .muted {
+            color: #888;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-back {
+            background: #b0bec5;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #90a4ae;
+            transform: translateY(-3px);
+        }
+
+        .footer {
+            background: var(--brand);
+            color: white;
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        /* ============== MOBILE RESPONSIVE FIX ============== */
+        @media (max-width: 900px) {
+
+            .container {
+                padding: calc(var(--nav-height) + 20px) 10px calc(var(--footer-height) + 20px);
+            }
+
+            .emr-container {
+                min-width: unset;        /* IMPORTANT FIX */
+                width: 100%;
+            }
+
+            .emr-card {
+                padding: 18px;
+                margin-bottom: 20px;
+            }
+
+            /* PATIENT SUMMARY GRID */
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            /* DOCTOR GRID */
+            .doctor-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            /* VITAL GRID */
+            .vital-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .visit-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        /* ============== SMALL MOBILE (PHONE) ============== */
+        @media (max-width: 480px) {
+
+            .summary-grid,
+            .doctor-grid,
+            .vital-grid {
+                grid-template-columns: 1fr; /* Single column for small phones */
+            }
+
+            .navbar {
+                padding: 0 12px;
+            }
+
+            .navbar h1 {
+                font-size: 18px;
+            }
+
+            .emr-card {
+                padding: 14px;
+            }
+
+            .vital-card {
+                padding: 14px;
+            }
+
+            .vital-time {
+                font-size: 14px;
+            }
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <i class="fa-solid fa-stethoscope"></i>
+        <h1>View Patient Details</h1>
+    </div>
+
+    <main>
+        <div class="container">
+            <div class="emr-container">
+
+                <!-- ================= PATIENT SUMMARY ================= -->
+                <div class="emr-card patient-summary">
+                    <h2>Patient Summary</h2>
+
+                    <div class="summary-grid">
+                        <div><span>ID</span><strong><%= personal.PatientId %></strong></div>
+                        <div><span>Name</span><strong><%= personal.Name %></strong></div>
+                        <div><span>Age / Gender</span><strong><%= personal.age %> / <%= personal.gender %></strong></div>
+                        <div><span>Blood Group</span><strong><%= personal.bloodGroup %></strong></div>
+                        <div><span>Contact</span><strong><%= personal.contactNumber %></strong></div>
+                        <div><span>Emergency</span><strong><%= personal.emergencyContact %></strong></div>
+                    </div>
+                </div>
+
+                <!-- ================= VISIT INFO ================= -->
+                <div class="emr-card visit-info">
+                    <div class="visit-header">
+                        <div>📅 <%= visit.visit_date %></div>
+                        <div>🏥 <%= visit.hospital %></div>
+                    </div>
+
+                    <!-- Doctor Section -->
+                    <div class="doctor-section">
+                        <h3>Doctor Assessment</h3>
+
+                        <% if (visit.doctor) { %>
+                        <div class="doctor-grid">
+                            <div><span>Disease</span><strong><%= visit.doctor.diseaseName %></strong></div>
+                            <div><span>Reason</span><strong><%= visit.doctor.reasonVisit %></strong></div>
+                            <div><span>Medications</span><strong><%= visit.doctor.currentMeds %></strong></div>
+                            <div><span>Treated By</span><strong><%= visit.doctor.treatedBy %></strong></div>
+                        </div>
+                        <% } else { %>
+                        <p class="muted">Doctor assessment not recorded</p>
+                        <% } %>
+                    </div>
+
+                    <!-- Nurse Vitals -->
+                    <div class="nurse-section">
+                        <h3>Nurse Vitals</h3>
+
+                        <% visit.nurse_entries.forEach(n => { %>
+                        <div class="vital-card">
+
+                            <div class="vital-time">
+                                🕒 <%= n.timestamp %>
+                            </div>
+
+                            <div class="vital-grid">
+                                <div><label>Temp</label><span><%= n.temperature %>°C</span></div>
+                                <div><label>BP</label><span><%= n.bp %></span></div>
+                                <div><label>Pulse</label><span><%= n.pulse %></span></div>
+                                <div><label>SpO₂</label><span><%= n.spo2 %>%</span></div>
+                                <div><label>Weight</label><span><%= n.weight %> kg</span></div>
+                                <div><label>Sugar</label><span><%= n.blood_sugar %></span></div>
+                                <div><label>Pain</label><span><%= n.pain %>/10</span></div>
+                                <div><label>Nurse</label><span><%= n.nurse_name %></span></div>
+                            </div>
+
+                            <% if (n.remarks) { %>
+                            <div class="vital-remarks">
+                                📝 <%= n.remarks %>
+                            </div>
+                            <% } %>
+
+                        </div>
+                        <% }) %>
+                    </div>
+
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-back" onclick="back_to_previous()">Back</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="footer">
+        © 2025 VEDSP Inventive Private Limited. All rights reserved.
+    </div>
+
+    <script>
+        function back_to_previous() {
+            window.location.href = "/view_patient_record";
+        }
+    </script>
+
+</body>
+
+</html>

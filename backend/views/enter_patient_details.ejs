@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hospital Information - Medical Software</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+         :root {
+            --brand: #009688;
+            --bg-start: #f2f7f6;
+            --bg-end: #e9f5f4;
+            --height-bar: 60px;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #e0f2f1, #f8fdfc);
+            color: #333;
+        }
+        /* Navbar */
+        
+        .navbar {
+            background-color: var(--brand);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            height: var(--height-bar);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .navbar i {
+            margin-right: 10px;
+            font-size: 26px;
+            color: #b2dfdb;
+        }
+        
+        .navbar h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
+        }
+        
+        main {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        /* Container */
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+            padding: 20px 0;
+        }
+        /* Form box */
+        
+        .form-box {
+            background: #ffffff;
+            padding: 45px 40px;
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            width: 400px;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .form-box h2 {
+            margin-bottom: 18px;
+            color: var(--brand);
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        form {
+            text-align: left;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        
+        input:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 4px rgba(0, 150, 136, 0.22);
+            outline: none;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        button {
+            flex: 1;
+            background: linear-gradient(90deg, #009688, #00796b);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 30px;
+            /* Rounded like your Figma mockup */
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+        
+        button:hover {
+            transform: scale(1.02);
+            background: linear-gradient(90deg, #00796b, #004d40);
+        }
+        /* Footer */
+        
+        .footer {
+            background-color: var(--brand);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: var(--height-bar);
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            font-size: 12px;
+            box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.06);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <i class="fa-solid fa-stethoscope" aria-hidden="true"></i>
+        <h1>Patient Information</h1>
+    </div>
+
+    <!-- Main content -->
+    <main>
+        <div class="container">
+            <div class="form-box">
+                <h2>Hospital Information</h2>
+                <form action="/enter_patient_details/action" method="post">
+                    <input type="text" name="hospital" placeholder="Hospital Name" value="<%= hospital_name || '' %>" required />
+                    <input type="text" name="patient_id" placeholder="Patient ID" value="<%= user_id || '' %>" required />
+
+                    <div class="button-group">
+                        <button class="btn-back" name="action" type="button" value="back" onclick="redirect_dashboard()">Back</button>
+                        <button class="btn-next" name="action" type="submit" value="next">Next</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 VEDSP Inventive Private Limited. All rights reserved.</p>
+    </div>
+
+
+    <script>
+        function redirect_dashboard() {
+            window.location.href = "/dashboard";
+        }
+    </script>
+</body>
+
+</html>

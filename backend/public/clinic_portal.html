@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clinic Portal - Med-Link</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #009688;
+      --nav-height: 60px;
+      --footer-height: 60px;
+      --card-width: 820px;
+      --form-max-width: 360px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e0f2f1, #f8fdfc);
+      min-height: 100vh;
+      padding-top: var(--nav-height);
+      padding-bottom: var(--footer-height);
+    }
+
+    /* NAVBAR — LEFT ALIGNED IN WEBVIEW */
+    .navbar {
+      background: var(--brand);
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      color: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+      z-index: 10;
+      justify-content: flex-start; /* LEFT on webview */
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: var(--brand);
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: var(--footer-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 13px;
+      text-align: center;
+      padding: 0 10px;
+      z-index: 10;
+    }
+
+    main {
+      padding: 10px;
+    }
+
+    /* CENTER */
+    .container-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+      padding: 10px;
+    }
+
+    .container {
+      width: var(--card-width);
+      max-width: 100%;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      display: flex;
+      overflow: hidden;
+      transition: 0.6s;
+      position: relative;
+    }
+
+    /* LEFT PANEL */
+    .left-panel {
+      width: 50%;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .left-panel i {
+      font-size: 48px;
+      color: var(--brand);
+    }
+
+    .left-panel h1 {
+      color: var(--brand);
+      font-size: 22px;
+    }
+
+    .left-panel p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      width: 50%;
+      padding: 25px 20px;
+      position: relative;
+      min-height: 420px;
+    }
+
+    /* FORM BOX */
+    .form-box {
+      width: 100%;
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      transition: transform 0.6s ease, opacity 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 15px;
+    }
+
+    h2 {
+      color: var(--brand);
+      margin-bottom: 6px;
+    }
+
+    label {
+      align-self: flex-start;
+      margin-left: calc(50% - (var(--form-max-width) / 2));
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .form-control {
+      width: 100%;
+      max-width: var(--form-max-width);
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      max-width: var(--form-max-width);
+      padding: 10px 12px;
+      border: none;
+      border-radius: 25px;
+      background: var(--brand);
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .toggle-btn {
+      width: 100%;
+      max-width: var(--form-max-width);
+      padding: 10px 12px;
+      border-radius: 25px;
+      background: rgba(0,128,0,0.12);
+      color: var(--brand);
+      border: 1px solid rgba(0,128,0,0.12);
+      margin-top: 6px;
+      cursor: pointer;
+    }
+
+    #loginBtn:hover{
+      background: #00796b;
+      box-shadow: 0 6px 16px rgba(0,150,136,0.3);
+    }
+
+    /* DEFAULT STATES */
+    #login-box {
+      margin-top: 40px;
+      transform: translateX(0);
+      opacity: 1;
+      z-index: 2;
+    }
+
+    #register-box {
+      transform: translateX(100%);
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .container.slide #login-box {
+      transform: translateX(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .container.slide #register-box {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* 🔹 MOBILE RESPONSIVE (PROPERLY FIXED) */
+    @media (max-width: 880px) {
+
+      .navbar {
+        justify-content: center; /* CENTER ONLY ON MOBILE */
+      }
+
+      .container {
+        width: 100%;
+        flex-direction: column;
+        border-radius: 16px;
+      }
+
+      .left-panel,
+      .right-panel {
+        width: 100%;
+        padding: 20px;
+      }
+
+      .left-panel {
+        order: 1;
+      }
+
+      .right-panel {
+        order: 2;
+        min-height: 420px;
+        display: flex;
+        justify-content: center;
+      }
+
+      /* KEEP SLIDE EVEN ON MOBILE */
+      #login-box {
+        transform: translateX(0);
+        opacity: 1;
+        position: absolute;
+      }
+
+      #register-box {
+        transform: translateX(100%);
+        opacity: 0;
+        position: absolute;
+      }
+
+      .container.slide #login-box {
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .container.slide #register-box {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* 🔥 FINAL MOBILE FIX FOR LABEL + INPUT ALIGNMENT 🔥 */
+      .form-box {
+        left: 0;
+        right: 0;
+        align-items: flex-start;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      label {
+        width: 100%;
+        max-width: var(--form-max-width);
+        margin-left: 0;
+        text-align: left;
+      }
+
+      .form-control,
+      .btn,
+      .toggle-btn {
+        width: 100%;
+        max-width: var(--form-max-width);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="navbar">
+  <div class="navbar-left">
+    <i class="fa-solid fa-stethoscope"></i>
+    <h1>Clinic Portal</h1>
+  </div>
+</div>
+
+<main>
+  <div class="container-wrapper">
+    <div class="container" id="mainBox">
+
+      <div class="left-panel">
+        <i class="fa-solid fa-stethoscope"></i>
+        <h1>Medical Software</h1>
+        <p>High-end medical dashboard for fast and secure patient management.</p>
+      </div>
+
+      <div class="right-panel">
+
+        <!-- LOGIN BOX -->
+        <div class="form-box" id="login-box">
+          <h2>Clinic Login</h2>
+
+          <label>Clinic ID</label>
+          <input id="id" class="form-control" type="text" placeholder="Enter Clinic ID">
+
+          <label>Password</label>
+          <input id="pwd" class="form-control" type="password" placeholder="Password">
+
+          <button class="btn" id="loginBtn" type="button">Submit</button>
+          <button class="toggle-btn" type="button" id="gotoRegisterBtn">Register</button>
+        </div>
+
+        <!-- REGISTER BOX -->
+        <div class="form-box" id="register-box">
+          <h2>Register</h2>
+
+          <label>Hospital Name</label>
+          <input id="hname_reg" class="form-control" type="text" placeholder="Hospital Name">
+
+          <label>Clinic Mail</label>
+          <input id="mail" class="form-control" type="text" placeholder="Clinic Mail Id">
+
+          <label>Password</label>
+          <input id="pwd_reg" class="form-control" type="password" placeholder="Create password">
+
+          <label>Confirm Password</label>
+          <input id="cnfrm_pwd" class="form-control" type="password" placeholder="Confirm password">
+
+          <button class="btn" id="createBtn" type="button">Create Account</button>
+          <button class="toggle-btn" type="button" id="backToLoginBtn">Back to Login</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="footer">
+  © 2025 VEDSP Inventive Private Limited. All rights reserved.
+</div>
+
+<script>
+const mainBox = document.getElementById('mainBox');
+const gotoRegisterBtn = document.getElementById('gotoRegisterBtn');
+const backToLoginBtn = document.getElementById('backToLoginBtn');
+
+function showRegister() {
+  mainBox.classList.add('slide');
+}
+
+function showLogin() {
+  mainBox.classList.remove('slide');
+}
+
+gotoRegisterBtn.addEventListener('click', showRegister);
+backToLoginBtn.addEventListener('click', showLogin);
+
+// LOGIN  —  🔥 FIXED VERSION (DO NOT MODIFY THIS)
+document.getElementById('loginBtn').addEventListener('click', async ()=> {
+  const hid = document.getElementById('id').value.trim();
+  const pwd = document.getElementById('pwd').value.trim();
+
+  if (!hid || !pwd) {
+    alert('Please enter Clinic ID and Password.');
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/clinic/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hid, pwd })
+    });
+
+    const data = await res.json();
+
+    // ❗️ CRUCIAL FIX: STOP REDIRECT WHEN LOGIN FAILS
+    if (!res.ok) {
+      alert(data.message);
+      return;   // ⛔️ DO NOT REDIRECT
+    }
+
+    // Only redirect when backend says success
+    alert(data.message);
+    window.location.href = data.redirectUrl;
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error. Please try again.");
+  }
+});
+
+
+// REGISTER
+document.getElementById('createBtn').addEventListener('click', async()=> {
+
+  const hname = document.getElementById('hname_reg').value.trim();
+  const mail = document.getElementById('mail').value.trim();
+  const pwd = document.getElementById('pwd_reg').value.trim();
+  const confirmPwd = document.getElementById('cnfrm_pwd').value.trim();
+
+  if (!hname || !mail || !pwd || !confirmPwd) {
+    alert('All fields are required');
+    return;
+  }
+
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*[!@#$%^&*()_\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
+
+  if (!passwordRegex.test(pwd)) {
+    alert(
+      'Password must:\n' +
+      '- be at least 8 characters\n' +
+      '- contain 1 uppercase letter\n' +
+      '- contain 1 special character'
+    );
+    return;
+  }
+
+  if (pwd !== confirmPwd) {
+    alert('Passwords do not match');
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/clinic/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ hname, mail, password: pwd })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Registration failed");
+      return;
+    }
+
+    alert(data.message);
+    showLogin();
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
+});
+</script>
+
+</body>
+</html>
