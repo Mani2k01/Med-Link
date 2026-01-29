@@ -7,13 +7,7 @@ class Database {
     this.databaseName = databaseName;
 
     this.pool = mysql.createPool({
-      host: process.env.DB_HHOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: this.databaseName,
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0
+      uri: process.env.DATABASE_URL
     });
 
     console.log("Database pool created successfully");
