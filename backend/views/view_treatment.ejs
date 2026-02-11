@@ -423,47 +423,40 @@
         <!-- APPOINTMENTS -->
         <% results.forEach(ap => { %>
         <div class="appointment-card"
-             data-doctor-id="<%= ap[1] %>"
-             data-date="<%= new Date(ap[5]).toISOString().split('T')[0] %>">
+             data-doctor-id="<%= ap.doctor_id %>"
+             data-date="<%= ap.safeDateISO %>">
 
             <div class="card-content">
                 <div class="card-header">
                     <div>
-                        <h3><%= ap[3] %></h3>
-                        <div class="sub-text">Patient ID: <%= ap[4] %></div>
+                        <h3><%= ap.patient_name %></h3>
+                        <div class="sub-text">Patient ID: <%= ap.patient_id %></div>
                     </div>
 
                     <span class="doctor-name-badge">
                         <i class="fa-solid fa-user-doctor"></i>
-                        <%= doctor_map[ap[1]] || "Unknown Doctor" %>
+                        <%= doctor_map[ap.doctor_id] || "Unknown Doctor" %>
                     </span>
 
-                    <span class="status <%= (ap[6] || '').toLowerCase() %>">
-                        <%= ap[6] %>
+                    <span class="status <%= (ap.status || '').toLowerCase() %>">
+                        <%= ap.status %>
                     </span>
                 </div>
 
                 <div class="card-body">
                     <div>
                         <i class="fa-solid fa-user-doctor"></i>
-                        Doctor ID: <b><%= ap[1] %></b>
+                        Doctor ID: <b><%= ap.doctor_id %></b>
                     </div>
 
                     <div>
                         <i class="fa-solid fa-calendar-days"></i>
-                        <%= new Date(ap[5]).toLocaleString('en-GB', {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true
-                        }) %>
+                        <%= ap.safeDateDisplay %>
                     </div>
 
                     <div>
                         <i class="fa-solid fa-notes-medical"></i>
-                        <%= ap[7] %>
+                        <%= ap.notes %>
                     </div>
                 </div>
             </div>

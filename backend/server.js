@@ -1798,21 +1798,59 @@ app.post("/change_doctor", authMiddleware, async (req, res) => {
 app.get("/view_treatments", authMiddleware, async (req, res) => {
   try {
     const hid = req.user.id;
-
     console.log("Hospital ID:", hid);
-    const results = await fetch_treatments_done(hid);
-    console.log("results:", results);
 
+    const rawResults = await fetch_treatments_done(hid);
     const doctors = await fetch_doctors_for_hosp(hid);
+    const counts = await fetch_treatment_counts();
 
-    let doctor_map = {};
+    const total_count = counts?.total_count || 0;
+    const doctor_count = counts?.doctor_count || {};
+
+    console.log("Total:", total_count, "Doctor Count:", doctor_count);
+
+    const doctor_map = {};
     doctors.forEach(d => {
-      doctor_map[d[1]] = d[2];  
+      doctor_map[d[1]] = d[2];
     });
 
-    const { total_count, doctor_count } = await fetch_treatment_counts();
+    const results = rawResults.map((r, i) => {
 
-    console.log("total count:", total_count, "doctor count:", doctor_count);
+      let safeDateISO = "";
+      let safeDateDisplay = "Date Not Available";
+
+      if (r[5]) {
+        const d = new Date(r[5]);
+
+        if (!isNaN(d.getTime())) {
+          safeDateISO = d.toISOString().split("T")[0];
+
+          safeDateDisplay = d.toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+          });
+        } else {
+          console.log("Invalid date at row", i, "value:", r[5]);
+        }
+      } else {
+        console.log(" Missing date at row", i);
+      }
+
+      return {
+        id: r[0],
+        doctor_id: r[1],
+        patient_name: r[3],
+        patient_id: r[4],
+        status: r[6] || "Unknown",
+        notes: r[7] || "",
+        safeDateISO,
+        safeDateDisplay
+      };
+    });
 
     return res.render("view_treatment", {
       results,
@@ -1823,7 +1861,7 @@ app.get("/view_treatments", authMiddleware, async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Error in /view_treatments:", err);
+    console.error("🔥 Error in /view_treatments:", err);
     return res.status(500).send("Internal Server Error");
   }
 });
