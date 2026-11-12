@@ -862,7 +862,7 @@ app.get("/update_issue", authMiddleware, (req, res) => {
 
 app.post("/update_issue/action", authMiddleware, async (req, res) => {
   const { action } = req.body;
-
+  console.log("update_issues called:");
   if (action === "submit") {
     const hospital = req.body.hospital;
     const patient_id = req.body.patientId;
@@ -882,16 +882,27 @@ app.post("/update_issue/action", authMiddleware, async (req, res) => {
 
     const existing = await db.fetchData(query1, [patient_id, hospital, today]);
 
-    const temperatures = req.body["temperature[]"] || [];
-    const bps = req.body["bp[]"] || [];
-    const pulses = req.body["pulse[]"] || [];
-    const spo2s = req.body["spo2[]"] || [];
-    const weights = req.body["weight[]"] || [];
-    const blood_sugars = req.body["blood_sugar[]"] || [];
-    const pains = req.body["pain[]"] || [];
-    const remarks_list = req.body["remarks[]"] || [];
-    const nurse_names = req.body["nurse_name[]"] || [];
-    const timestamps = req.body["timestamp[]"] || [];
+    const temperatures = req.body["temperature"] || [];
+    const bps = req.body["bp"] || [];
+    const pulses = req.body["pulse"] || [];
+    const spo2s = req.body["spo2"] || [];
+    const weights = req.body["weight"] || [];
+    const blood_sugars = req.body["blood_sugar"] || [];
+    const pains = req.body["pain"] || [];
+    const remarks_list = req.body["remarks"] || [];
+    const nurse_names = req.body["nurse_name"] || [];
+    const timestamps = req.body["timestamp"] || [];
+
+    console.log("temperatures:", temperatures);
+    console.log("bps:", bps);
+    console.log("pulses:", pulses);
+    console.log("spo2s:", spo2s);
+    console.log("weights:", weights);
+    console.log("blood_sugars:", blood_sugars);
+    console.log("pains:", pains);
+    console.log("remarks_list:", remarks_list);
+    console.log("nurse_names:", nurse_names);
+    console.log("timestamps:", timestamps);
 
     const incoming_readings = [];
 
@@ -951,8 +962,10 @@ app.post("/update_issue/action", authMiddleware, async (req, res) => {
           payload.nurse_entries.push(r);
         }
       });
-
+      
       payload.doctor_entry = doctor_entry;
+      console.log("Merged nurse entries:", payload.nurse_entries);
+      console.log("Updated doctor entry:", payload.doctor_entry);
 
       const new_json = JSON.stringify(payload);
 
@@ -1795,62 +1808,84 @@ app.post("/change_doctor", authMiddleware, async (req, res) => {
 });
 
 
+
 app.get("/view_treatments", authMiddleware, async (req, res) => {
   try {
+    console.log("entered treatment history");
+
     const hid = req.user.id;
     console.log("Hospital ID:", hid);
 
+    // Fetch treatment records, doctors and counts
     const rawResults = await fetch_treatments_done(hid);
     const doctors = await fetch_doctors_for_hosp(hid);
     const counts = await fetch_treatment_counts();
 
+    // Total treatment count
     const total_count = counts?.total_count || 0;
-    const doctor_count = counts?.doctor_count || {};
 
-    console.log("Total:", total_count, "Doctor Count:", doctor_count);
+    // Doctor-wise treatment count
+    const doctor_count = counts?.doctor_counts || {};
 
+    console.log("Total:", total_count);
+    console.log("Doctor Count:", doctor_count);
+
+    // Create doctor ID -> doctor name mapping
     const doctor_map = {};
+
     doctors.forEach(d => {
       doctor_map[d[1]] = d[2];
     });
 
+    // Process treatment records
     const results = rawResults.map((r, i) => {
 
       let safeDateISO = "";
       let safeDateDisplay = "Date Not Available";
 
-      if (r[5]) {
-        const d = new Date(r[5]);
+        // Database returns objects, not arrays
+        if (r.appointment) {
+          const d = new Date(r.appointment);
 
-        if (!isNaN(d.getTime())) {
-          safeDateISO = d.toISOString().split("T")[0];
+          if (!isNaN(d.getTime())) {
 
-          safeDateDisplay = d.toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true
-          });
+            safeDateISO = d.toISOString().split("T")[0];
+
+            safeDateDisplay = d.toLocaleString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true
+            });
+
+          } else {
+            console.log(
+              "Invalid date at row",
+              i,
+              "value:",
+              r.appointment
+            );
+          }
+
         } else {
-          console.log("Invalid date at row", i, "value:", r[5]);
+          console.log("Missing appointment date at row", i);
         }
-      } else {
-        console.log(" Missing date at row", i);
-      }
 
-      return {
-        id: r[0],
-        doctor_id: r[1],
-        patient_name: r[3],
-        patient_id: r[4],
-        status: r[6] || "Unknown",
-        notes: r[7] || "",
-        safeDateISO,
-        safeDateDisplay
-      };
+        return {
+          id: r.id,
+          doctor_id: r.doctor_id,
+          patient_name: r.patient_name,
+          patient_id: r.patient_id,
+          status: r.status || "Unknown",
+          notes: r.reason || "",
+          safeDateISO,
+          safeDateDisplay
+        };
     });
+
+    console.log("Processed Treatment Results:", results);
 
     return res.render("view_treatment", {
       results,
@@ -1861,7 +1896,8 @@ app.get("/view_treatments", authMiddleware, async (req, res) => {
     });
 
   } catch (err) {
-    console.error("🔥 Error in /view_treatments:", err);
+    console.error("Error in /view_treatments:", err);
+
     return res.status(500).send("Internal Server Error");
   }
 });

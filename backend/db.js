@@ -10,7 +10,14 @@ class Database {
       uri: process.env.DATABASE_URL
     });
 
-    console.log("Database pool created successfully");
+    // this.pool = mysql.createPool({
+    //   user: "root",
+    //   host: "localhost",
+    //   database: this.databaseName,
+    //   password: "Manikandan12",
+    //   port: 3306,
+    // });
+    // console.log("Database pool created successfully");
   }
 
   async getConnection() {
