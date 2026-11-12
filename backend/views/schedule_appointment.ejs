@@ -204,12 +204,12 @@
 
                     <% results.forEach(doc => { %>
                         <option
-                            value="<%= doc.doctor_id %>"
-                            data-department="<%= doc.specialist %>"
+                            value="<%= doc[1] %>"
+                            data-department="<%= doc[4] %>"
                             data-hospital="<%= clinic.hospital %>"
                             data-address="<%= clinic.hospital_address %>"
                         >
-                            Dr. <%= doc.doctor %> | (<%= doc.specialist %>)
+                            Dr. <%= doc[2] %> | (<%= doc[4] %>)
                         </option>
                     <% }) %>
                 </select>

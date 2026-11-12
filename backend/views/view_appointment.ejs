@@ -300,7 +300,7 @@
             <select id="doctorFilter" class="doctor-select">
                 <option value="all">All Doctors</option>
                 <% doctors.forEach(d => { %>
-                    <option value="<%= d.doctor_id %>"><%= d.doctor_name %></option>
+                    <option value="<%= d[1] %>"><%= d[2] %></option>
                 <% }) %>
             </select>
 

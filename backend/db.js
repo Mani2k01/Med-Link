@@ -17,7 +17,7 @@ class Database {
     //   password: "Manikandan12",
     //   port: 3306,
     // });
-    // console.log("Database pool created successfully");
+    console.log("Database pool created successfully");
   }
 
   async getConnection() {

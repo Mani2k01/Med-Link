@@ -1609,6 +1609,8 @@ app.get("/view_appointment", authMiddleware, async (req, res) => {
       results = await fetch_appointments(user_id);
       doctors = await fetch_doctors_for_hosp(user_id);
 
+      console.log("Fetched doctors for clinic:", doctors);
+
       // create doctor_map { doctor_id : doctor_name }
       doctor_map = {};
       doctors.forEach(d => {
